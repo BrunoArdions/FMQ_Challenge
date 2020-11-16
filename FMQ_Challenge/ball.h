@@ -9,6 +9,7 @@ public:
 	void update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::vector<paddle_bullet*> vecbullets);
 	void applyVelocity();
 	bool bOut;
+	bool bPoint;
 	bool bstoped;
 	void resetposition(sf::RenderWindow* window);
 private:

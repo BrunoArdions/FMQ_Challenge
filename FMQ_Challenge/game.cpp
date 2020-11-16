@@ -111,6 +111,11 @@ void game::Update(sf::RenderWindow* window) {
 				pauseGame = true;
 				playing = false;
 				countballStoped = 0;
+				for (auto &ball : vecBalls) {
+					if (ball->bPoint)
+						this->bullet1Score->addCredits();
+				}
+
 				this->bullet1Score->addround();
 	
 			}

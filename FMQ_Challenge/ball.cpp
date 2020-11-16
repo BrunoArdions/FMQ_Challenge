@@ -5,6 +5,7 @@ ball::ball( credits* creditBullet1,int id) {
 
 	//find their scores
 	this->bOut= false;
+	this->bPoint = true;
 	this->bstoped = true;
 	this->credit1 = creditBullet1;
 	this->Load("ball.png");
@@ -26,26 +27,24 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 			this->velocity.x *= -1;
 		}
 	}
-	// against other balls
-	for (auto &target : vecBalls)
-	{
-		if (this->id != target->id) // do not check against self
-		{
-	
-				if (this-> checkCollision(target)) {
-					//collisionBalls(this, target);
-				}
-			}
-		}
+	//// against other balls
+	//for (auto &target : vecBalls)
+	//{
+	//	if (this->id != target->id) // do not check against self
+	//	{
+	//
+	//			if (this-> checkCollision(target)) {
+	//				collisionBalls(this, target);
+	//			}
+	//		}
+	//	}
 
 	//if it hits the ceiling
 	if (this->getPosition().y < 0 || this->getPosition().y + this->getGlobalBounds().height > window->getSize().y) {
 		this->velocity.y *= -1;
 	}
 
-	if (this->getPosition().x < 0 || this->getPosition().x+ this->getGlobalBounds().width > window->getSize().x) {
-		this->velocity.x *= -1;
-	}
+
 
 	if (!(this->bstoped)) 
 	{
@@ -56,7 +55,6 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 		// Stop ball when velocity is neglible
 		if (this->velocity.x < fStable && this->velocity.y < fStable)
 		{
-
 			this->velocity.x = 0;
 			this->velocity.y = 0;
 			this->bstoped = true;
@@ -64,11 +62,15 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 	} 
 	//see whether the players have scored a point
 		if (this->getPosition().x < 5 && !bOut) {	
-		this->bOut=true;
+		this->bPoint=false;
+		this->velocity.x = 0;
+		this->velocity.y = 0;
 	}
 
 	if (this->getPosition().x > window->getSize().x - 5 && bOut) {
-		this->bOut = true;
+		this->bPoint = false;
+		this->velocity.x = 0;
+		this->velocity.y = 0;
 	}
 	Entity::update();
 }
@@ -78,8 +80,8 @@ void ball::applyVelocity()
 {
 	srand(time(NULL));
 	// Apply velocity
-	this->velocity.x = 1 +static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
-	this->velocity.y = 1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
+	this->velocity.x = 3 +static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
+	this->velocity.y = 3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
 	this->bstoped = false;
 	this->bOut = false;
 
