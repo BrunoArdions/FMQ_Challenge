@@ -44,9 +44,9 @@ void game::Initialize(sf::RenderWindow* window) {
 
 
 void game::addBall(sf::RenderWindow* window, credits* bullet1Score, int id) {
-	vecBalls.emplace_back(new ball(bullet1Score, id));
-	srand(time(NULL));
-	vecBalls[id]->setPosition(((float)rand() / (float)RAND_MAX) * window->getSize().x, ((float)rand() / (float)RAND_MAX) * window->getSize().y);
+	ball* b = new ball(bullet1Score, id);
+	vecBalls.emplace_back(b);
+	b->setPosition(((float)rand() / (float)RAND_MAX) * (window->getSize().x*1.1f), ((float)rand() / (float)RAND_MAX) * (window->getSize().y*1.1f));
 }
 
 void game::Render(sf::RenderWindow* window) {
@@ -54,6 +54,7 @@ void game::Render(sf::RenderWindow* window) {
 	for (auto &ball : vecBalls) {
 		window->draw(*ball);
 	}
+
 	window->draw(*this->bullet1);
 	window->draw(*this->bullet2);
 	window->draw(*this->bullet3);

@@ -11,6 +11,7 @@ public:
 	bool bOut;
 	bool bstoped;
 private:
+	const sf::Color colorArray[5] = { sf::Color::Cyan, sf::Color::Blue, sf::Color::Green, sf::Color::Red, sf::Color::Yellow };
 	void resetposition(sf::RenderWindow* window);
 	credits* credit1;
 	// Threshold indicating stability of object

@@ -6,6 +6,7 @@ paddle_bullet::paddle_bullet(int bullet) {
 		//bullet 1...
 	case 0:
 		this->Load("player1.png");
+		this->setScale(1.5f, 1.5f);
 		break;
 
 		//bullet 2...

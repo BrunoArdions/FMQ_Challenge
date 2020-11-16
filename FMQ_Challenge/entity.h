@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-//be able to render sprites on the screen
+//to be able to render sprites on the screen
 class Entity : public sf::Sprite {
 public:
 	Entity() {
