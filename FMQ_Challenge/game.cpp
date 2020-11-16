@@ -7,6 +7,7 @@
 sf::Event event;
 bool pauseGame = true;
 bool playing = false;
+int countballStoped = 0;
 
 void game::Initialize(sf::RenderWindow* window) {
 	//initialise the font
@@ -68,7 +69,7 @@ void game::Update(sf::RenderWindow* window) {
 		//condition to pause the game
 		if (!this->spaceKey && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && playing) {
 			
-			pauseGame = true;
+			pauseGame = !pauseGame;
 		}
 
 		//condition to start the game
@@ -98,12 +99,20 @@ void game::Update(sf::RenderWindow* window) {
 		{
 			//this->bullet1->update();
 			//this->bullet2->update();
-			for (auto &ball : vecBalls)
-				ball->update(window,vecBalls,vecbullets);
-						
-			//condition to pause the game
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && (playing)) {
+			for (auto &ball : vecBalls) {
+				ball->update(window, vecBalls, vecbullets);
+				if (ball->bstoped && !(ball->bOut)) {
+					countballStoped++;
+					ball->bOut = true;	
+				}
+			}
+			//end round TODO clear hardinput balls number
+			if (50 == countballStoped && playing) {
 				pauseGame = true;
+				playing = false;
+				countballStoped = 0;
+				this->bullet1Score->addround();
+	
 			}
 		}
 

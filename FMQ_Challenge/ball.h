@@ -10,11 +10,13 @@ public:
 	void applyVelocity();
 	bool bOut;
 	bool bstoped;
-private:
-	const sf::Color colorArray[5] = { sf::Color::Cyan, sf::Color::Blue, sf::Color::Green, sf::Color::Red, sf::Color::Yellow };
 	void resetposition(sf::RenderWindow* window);
+private:
+	void collisionBalls(ball* b1, ball* b2);
+	const sf::Color colorArray[5] = { sf::Color::Cyan, sf::Color::Blue, sf::Color::Green, sf::Color::Red, sf::Color::Yellow };
+	
 	credits* credit1;
 	// Threshold indicating stability of object
-	float fStable = 0.05f;
+	float fStable = 0.02f;
 	int id;
 };

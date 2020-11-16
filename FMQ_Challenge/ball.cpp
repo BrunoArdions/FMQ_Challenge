@@ -33,8 +33,7 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 		{
 	
 				if (this-> checkCollision(target)) {
-					this->velocity.x *= -1;
-					this->velocity.y *= -1;
+					//collisionBalls(this, target);
 				}
 			}
 		}
@@ -43,12 +42,19 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 	if (this->getPosition().y < 0 || this->getPosition().y + this->getGlobalBounds().height > window->getSize().y) {
 		this->velocity.y *= -1;
 	}
-	if (!(this->bstoped))
+
+	if (this->getPosition().x < 0 || this->getPosition().x+ this->getGlobalBounds().width > window->getSize().x) {
+		this->velocity.x *= -1;
+	}
+
+	if (!(this->bstoped)) 
 	{
-		this->velocity.x -= this->velocity.x * 0.99f;					// Apply drag and gravity
-		this->velocity.y -= this->velocity.y * 0.99f;
+		this->velocity.x -=  0.01f;					// Apply drag and gravity
+		this->velocity.y -=  0.01f;
+
+
 		// Stop ball when velocity is neglible
-		if (fabs(this->velocity.x * this->velocity.x + this->velocity.y * this->velocity.y) < fStable)
+		if (this->velocity.x < fStable && this->velocity.y < fStable)
 		{
 
 			this->velocity.x = 0;
@@ -75,7 +81,42 @@ void ball::applyVelocity()
 	this->velocity.x = 1 +static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
 	this->velocity.y = 1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
 	this->bstoped = false;
+	this->bOut = false;
 
+}
+
+
+void ball::collisionBalls(ball* b1, ball* b2) {
+	float fEfficiency = 1.00f;
+	float mass = 10.00f;
+	// Distance between balls
+	float fDistance = sqrtf((b1->getPosition().x - b2->getPosition().x)*(b1->getPosition().x - b2->getPosition().x) + (b1->getPosition().y - b2->getPosition().y)*(b1->getPosition().y - b2->getPosition().y));
+
+	// Normal
+	float nx = (b2->getPosition().x - b1->getPosition().x) / fDistance;
+	float ny = (b2->getPosition().y - b1->getPosition().y) / fDistance;
+
+	// Tangent
+	float tx = -ny;
+	float ty = nx;
+
+	// Dot Product Tangent
+	float dpTan1 = b1->velocity.x * tx + b1->velocity.y * ty;
+	float dpTan2 = b2->velocity.x  * tx + b2->velocity.y * ty;
+
+	// Dot Product Normal
+	float dpNorm1 = b1->velocity.x  * nx + b1->velocity.y * ny;
+	float dpNorm2 = b2->velocity.x  * nx + b2->velocity.y  * ny;
+
+	// Conservation of momentum in 1D
+	float m1 = fEfficiency * (dpNorm1 *  + 2.0f * mass * dpNorm2) / 20;
+	float m2 = fEfficiency * (dpNorm2 *  + 2.0f * mass * dpNorm1) / 20;
+
+	// Update ball velocities
+	b1->velocity.x = tx * dpTan1 + nx * m1;
+	b1->velocity.y = ty * dpTan1 + ny * m1;
+	b2->velocity.x = tx * dpTan2 + nx * m2;
+	b2->velocity.y = ty * dpTan2 + ny * m2;
 }
 
 // restart balls
@@ -91,6 +132,6 @@ void ball::resetposition(sf::RenderWindow* window) {
 	if (rand() % 2 == 0) {
 		velocity.y *= -1;
 	}
+	this->bstoped = false;
 	std::cout << velocity.x << " " << velocity.y << std::endl;
-
 }
