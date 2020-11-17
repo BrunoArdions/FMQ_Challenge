@@ -12,6 +12,7 @@ public:
 	void creditsOut();
 	void creditsUsed();
 	int getCurrentCredits();
+	int getCurrentRound();
 
 private:
 	int currentCredits;

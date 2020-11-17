@@ -11,8 +11,8 @@ ball::ball( credits* creditBullet1,int id) {
 	this->Load("ball.png");
 	this->setScale(0.7f, 0.7f);
 	this->id = id;
-	this->velocity.x = 1;
-	this->velocity.y = 1;
+	this->velocity.x = 3;
+	this->velocity.y = 3;
 }
 
 
@@ -27,6 +27,7 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 			this->velocity.x *= -1;
 		}
 	}
+	 
 	//// against other balls
 	//for (auto &target : vecBalls)
 	//{
@@ -34,7 +35,7 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 	//	{
 	//
 	//			if (this-> checkCollision(target)) {
-	//				collisionBalls(this, target);
+	//				//collisionBalls(this, target);
 	//			}
 	//		}
 	//	}
@@ -48,8 +49,8 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 
 	if (!(this->bstoped)) 
 	{
-		this->velocity.x -=  0.01f;					// Apply drag and gravity
-		this->velocity.y -=  0.01f;
+		this->velocity.x -= velocity.x * 0.01f;					// Apply drag and gravity
+		this->velocity.y -= velocity.y *0.01f;
 
 
 		// Stop ball when velocity is neglible
@@ -79,9 +80,9 @@ void ball::update(sf::RenderWindow* window, std::vector<ball*> vecBalls, std::ve
 void ball::applyVelocity() 
 {
 	srand(time(NULL));
-	// Apply velocity
-	this->velocity.x = 3 +static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
-	this->velocity.y = 3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2 - 1)));;
+	// Apply velocity TODO remove magic numbers
+	this->velocity.x = 0.01f * (this->getPosition().x - ((float)rand() / (float)RAND_MAX));
+	this->velocity.y = 0.01f * (this->getPosition().y - ((float)rand() / (float)RAND_MAX));
 	this->bstoped = false;
 	this->bOut = false;
 
@@ -90,7 +91,7 @@ void ball::applyVelocity()
 
 void ball::collisionBalls(ball* b1, ball* b2) {
 	float fEfficiency = 1.00f;
-	float mass = 10.00f;
+	float mass = 5.00f;
 	// Distance between balls
 	float fDistance = sqrtf((b1->getPosition().x - b2->getPosition().x)*(b1->getPosition().x - b2->getPosition().x) + (b1->getPosition().y - b2->getPosition().y)*(b1->getPosition().y - b2->getPosition().y));
 

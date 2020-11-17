@@ -22,6 +22,10 @@ int credits::getCurrentCredits() {
 	return this->currentCredits;
 }
 
+int credits::getCurrentRound() {
+	return this->currentRound;
+}
+
 void credits::creditsOut() {
 	if (0 < this->currentCredits) {
 		this->currentCredits -= 1;

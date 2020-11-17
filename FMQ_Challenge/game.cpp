@@ -9,6 +9,7 @@ bool pauseGame = true;
 bool playing = false;
 int countballStoped = 0;
 
+
 void game::Initialize(sf::RenderWindow* window) {
 	//initialise the font
 	this->font = new sf::Font();
@@ -17,20 +18,28 @@ void game::Initialize(sf::RenderWindow* window) {
 	//initialise the score texts
 	this->bullet1Score = new credits(*font, 32U);
 
-	/*this->bullet2Score = new credits(*font, 32U);
-	this->bullet2Score->setPosition(window->getSize().x - this->bullet2Score->getGlobalBounds().width, 0);
-	*/
-
-	this->bullet1 = new paddle_bullet(0);
+	this->bullet1 = new paddle_bullet();
 	this->bullet1->setPosition(30, window->getSize().y / 4);
-	this->bullet3 = new paddle_bullet(0);
+	this->bullet3 = new paddle_bullet();
 	this->bullet3->setPosition(30, window->getSize().y * 3 / 4);
 	
+	/*PAUSE TEXT*/
+	this->pauseText= new sf::Text("Game Paused!", *this->font, 32U);
 
-	this->bullet2 = new paddle_bullet(1);;
+	this->pauseText->setOrigin(this->pauseText->getGlobalBounds().width / 2, this->pauseText->getGlobalBounds().height / 2);
+	//set the position
+	this->pauseText->setPosition(window->getSize().x / 2, window->getSize().y / 2);
+	/*Round TEXT*/
+	this->roundText = new sf::Text("Round Ended!", *this->font, 32U);
+
+	this->roundText->setOrigin(this->roundText->getGlobalBounds().width / 2, this->roundText->getGlobalBounds().height / 2);
+	//set the position
+	this->roundText->setPosition(window->getSize().x / 2, window->getSize().y / 2);
+
+	this->bullet2 = new paddle_bullet();;
 	//move bullet2 to the right
 	this->bullet2->setPosition(window->getSize().x - this->bullet2->getGlobalBounds().width - 30, window->getSize().y /  4);
-	this->bullet4 = new paddle_bullet(1);
+	this->bullet4 = new paddle_bullet();
 	this->bullet4->setPosition(window->getSize().x - this->bullet4->getGlobalBounds().width - 30, window->getSize().y *3 / 4);
 
 	vecbullets.emplace_back(bullet1);
@@ -47,7 +56,7 @@ void game::Initialize(sf::RenderWindow* window) {
 void game::addBall(sf::RenderWindow* window, credits* bullet1Score, int id) {
 	ball* b = new ball(bullet1Score, id);
 	vecBalls.emplace_back(b);
-	b->setPosition(((float)rand() / (float)RAND_MAX) * (window->getSize().x*1.1f), ((float)rand() / (float)RAND_MAX) * (window->getSize().y*1.1f));
+	b->setPosition(((float)rand() / (float)RAND_MAX) * window->getSize().x, ((float)rand() / (float)RAND_MAX) * window->getSize().y);
 }
 
 void game::Render(sf::RenderWindow* window) {
@@ -65,7 +74,13 @@ void game::Render(sf::RenderWindow* window) {
 
 void game::Update(sf::RenderWindow* window) {
 	
-	
+		
+		if(pauseGame && playing && 0 < bullet1Score->getCurrentRound()) {
+		window->draw(*this->pauseText);
+		}
+		else if (pauseGame && !playing && 0 < bullet1Score->getCurrentRound()) {
+			window->draw(*this->roundText);
+		}
 		//condition to pause the game
 		if (!this->spaceKey && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && playing) {
 			
@@ -77,6 +92,7 @@ void game::Update(sf::RenderWindow* window) {
 			playing = true;
 			this->bullet1Score->creditsUsed();
 			pauseGame = false;
+			this->bullet1Score->addround();
 			for (auto &ball : vecBalls)
 			{
 				ball->applyVelocity();
@@ -96,7 +112,9 @@ void game::Update(sf::RenderWindow* window) {
 		this->bullet1Score->update();
 		
 		if (!pauseGame)
-		{
+		{	
+			// delete pause text
+			//TODO second game mode to be finished 
 			//this->bullet1->update();
 			//this->bullet2->update();
 			for (auto &ball : vecBalls) {
@@ -106,7 +124,7 @@ void game::Update(sf::RenderWindow* window) {
 					ball->bOut = true;	
 				}
 			}
-			//end round TODO clear hardinput balls number
+			//end round TODO clear magic balls number
 			if (50 == countballStoped && playing) {
 				pauseGame = true;
 				playing = false;
@@ -116,7 +134,8 @@ void game::Update(sf::RenderWindow* window) {
 						this->bullet1Score->addCredits();
 				}
 
-				this->bullet1Score->addround();
+				
+				
 	
 			}
 		}

@@ -25,8 +25,9 @@ private:
 	paddle_bullet* bullet4;
 	ball* theBall;
 	credits* bullet1Score;
-
+	sf::Text* pauseText;
+	sf::Text* roundText;
 	bool aKey, spaceKey, rKey;
-
+	const sf::Color colorArray[5] = { sf::Color::Cyan, sf::Color::Blue, sf::Color::Green, sf::Color::Red, sf::Color::Yellow };
 	sf::Font* font;
 };
